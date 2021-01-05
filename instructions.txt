@@ -1,0 +1,94 @@
+
+// здесь продемонстрированы возможные используемые параметры для валидации для каждого отдельного типа поля (можно эксперементировать с комбинациями правил валидации)
+
+// example для личного использования:
+
+
+$validator = new UniversalValidator(); // once
+
+if ($validator -> startValidate($processedData[custom parameters])){
+    // it is valid :)
+}
+else{
+    // sorry, but it is invalid :(
+}
+
+
+// examples представленные в проекте для демонстрации
+
+// Type email
+
+
+$validator -> startValidate(
+    $processedData = [
+        "type" => "email", // указываем тип
+
+        "name" => "email", // указываем имя для поля
+
+        "value" => $_POST['email'], // указываем действующее имя поля, которое необходимо обработать
+
+        "checkPatternValidateFilters" => true, // настройка фильтра валидации для типов: boolean, domain, email, float, int, ip, mac_address, regexp, url, custom смотреть возможные варианты: https://www.php.net/manual/ru/filter.filters.validate.php
+
+        "patternFilterSettings" => [
+            "patternValidateFilterName" => FILTER_VALIDATE_EMAIL, // название используемого фильтра
+            "patternFilterFlag" => FILTER_FLAG_EMAIL_UNICODE, // название используемого флага
+        ],
+
+        "requiredValue" => true, // обязательное ли поле
+
+        "isCustom" => false, // собственная обработка поля
+        "customSettings" => [ 
+            "customPatternRegexp" => "",
+        ],
+    ],
+);
+
+
+// type Text
+
+
+$validator -> startValidate(
+    $processedData = [
+        "type" => "text", 
+        "name" => "text",
+        "value" => $_POST['text'],
+        "requiredValue" => true, // обязательное поле
+        "isCustom" => true, // собственный шаблон обработки
+        "customSettings" => [
+            "customPatternRegexp" => ("/^.{3,20}$/"), // шаблон регулярное выражение
+        ],
+
+        "isMultiple" => false, // стандартные многочисленные значения - нет
+        "isCustomMultiple" => true, // кастомные многочисленные значения - да (перечисление значений в одной строке)
+        "multiplePatternSettings" => [
+            "customMultiplePattern" => ",", // значения будут отделены запятой
+            "minCountValueChecked" => 2, // минимально 2 значения должно быть
+            "maxCountValueChecked" => 3, // максимально 3
+        ],
+    ],
+);
+
+
+// type Number
+
+$validator -> startValidate(
+    $processedData = [
+        "type" => "number", 
+        "name" => "number",
+        "value" => $_POST['number'],
+        "checkPatternValidateFilters" => true, // стандартная валидация - да
+        "patternFilterSettings" => [
+            "patternValidateFilterName" => FILTER_VALIDATE_INT,
+            "patternFilterFlag" => FILTER_FLAG_ALLOW_OCTAL,
+        ],
+        "requiredValue" => true, // обязательное поле
+
+        "isCustom" => false, // кастомная дополнительная обработка (выключена)
+        "customSettings" => [
+            "customPatternRegexp" => ""), // регулярное выражение, например максимум 5 цифр или одна цифра от 5 до 10
+        ],
+    ],
+);
+
+// ...
+
